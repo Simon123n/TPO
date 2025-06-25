@@ -1,1 +1,20 @@
+package test;
 
+import modelo.GrafoPonderado;
+
+public class TestGrafoDijkstra {
+
+    public static void main(String[] args) {
+        GrafoPonderado g = new GrafoPonderado();
+
+        g.agregarArista("Deposito", "Congreso", 4.0);
+        g.agregarArista("Deposito", "Puerto Madero", 3.5);
+        g.agregarArista("Congreso", "Recoleta", 5.2);
+        g.agregarArista("Puerto Madero", "Recoleta", 9.7);
+        g.agregarArista("Congreso", "Palermo", 4.3);
+        g.agregarArista("Palermo", "Recoleta", 3.7);
+
+        double dist = g.dijkstra("Deposito", "Recoleta");
+        System.out.println("Tiempo minimo Deposito → Recoleta: " + dist + " min");
+    }
+}
