@@ -1,1 +1,11 @@
+package modelo;
 
+public class Par<V> {
+    public V vertice;
+    public double prioridad;
+
+    public Par(V vertice, double prioridad) {
+        this.vertice = vertice;
+        this.prioridad = prioridad;
+    }
+}
