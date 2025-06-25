@@ -1,1 +1,10 @@
+package interfaces;
 
+public interface ILista<T> {
+    void insertar(INodo<T> nodo);
+    boolean eliminar(T dato);
+    INodo<T> buscar(T dato);
+    void imprimir();  
+    boolean esVacia();
+    int tamanio();
+}
