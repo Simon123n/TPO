@@ -1,1 +1,70 @@
+package modelo;
 
+import interfaces.INodo;
+import java.util.HashMap;
+import java.util.Map;
+
+public class GrafoPonderado {
+
+    private Lista<Vertice> vertices;
+    private Map<String, Vertice> mapa; // para busqueda rapida
+
+    public GrafoPonderado() {
+        this.vertices = new Lista<>();
+        this.mapa = new HashMap<>();
+    }
+
+    public Vertice agregarVertice(String nombre) {
+        if (mapa.containsKey(nombre)) {
+            return mapa.get(nombre);
+        }
+        Vertice v = new Vertice(nombre, vertices.tamanio());
+        Nodo<Vertice> nodo = new Nodo<>(v);
+        vertices.insertar(nodo);
+        mapa.put(nombre, v);
+        return v;
+    }
+
+    public void agregarArista(String origen, String destino, double peso) {
+        Vertice vOrigen = agregarVertice(origen);
+        Vertice vDestino = agregarVertice(destino);
+        vOrigen.agregarArista(vDestino, peso);
+        // Si es no dirigido, descomentar la siguiente linea
+        // vDestino.agregarArista(vOrigen, peso);
+    }
+
+    public double dijkstra(String origen, String destino) {
+        if (!mapa.containsKey(origen) || !mapa.containsKey(destino))
+            throw new IllegalArgumentException("Origen o destino inexistente");
+
+        Map<Vertice, Double> dist = new HashMap<>();
+        ColaConPrioridadLista<Vertice> cola = new ColaConPrioridadLista<>();
+
+        Vertice vOrigen = mapa.get(origen);
+        dist.put(vOrigen, 0.0);
+        cola.encolar(vOrigen, 0.0);
+
+        while (!cola.esVacia()) {
+            Par<Vertice> par = cola.desencolar();
+            Vertice actual = par.vertice;
+            double dActual = par.prioridad;
+
+            if (actual.getNombre().equals(destino)) {
+                return dActual;
+            }
+
+            INodo<Arista> nodoArista = actual.getAdyacentes().getPrimero();
+            while (nodoArista != null) {
+                Arista a = nodoArista.getDato();
+                Vertice vecino = a.getDestino();
+                double nuevoDist = dActual + a.getPeso();
+                if (!dist.containsKey(vecino) || nuevoDist < dist.get(vecino)) {
+                    dist.put(vecino, nuevoDist);
+                    cola.encolar(vecino, nuevoDist);
+                }
+                nodoArista = nodoArista.getSiguiente();
+            }
+        }
+        return Double.POSITIVE_INFINITY; // No hay camino
+    }
+}
