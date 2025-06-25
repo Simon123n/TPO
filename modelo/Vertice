@@ -1,1 +1,33 @@
+package modelo;
 
+
+
+public class Vertice {
+    private String nombre;
+    private Lista<Arista> adyacentes;
+    private int indice;
+
+    public Vertice(String nombre, int indice) {
+        this.nombre = nombre;
+        this.indice = indice;
+        this.adyacentes = new Lista<>();
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public int getIndice() {
+        return indice;
+    }
+
+    public Lista<Arista> getAdyacentes() {
+        return adyacentes;
+    }
+
+    public void agregarArista(Vertice destino, double peso) {
+        Arista a = new Arista(destino, peso);
+        Nodo<Arista> nodo = new Nodo<>(a);
+        adyacentes.insertar(nodo);
+    }
+}
