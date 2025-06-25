@@ -1,1 +1,58 @@
+package modelo;
 
+import interfaces.INodo;
+
+public class ColaConPrioridadLista<V> {
+
+    private Lista<Par<V>> lista;
+
+    public ColaConPrioridadLista() {
+        this.lista = new Lista<>();
+    }
+
+    public boolean esVacia() {
+        return lista.esVacia();
+    }
+
+    public void encolar(V vertice, double prioridad) {
+        Par<V> nuevoPar = new Par<>(vertice, prioridad);
+        Nodo<Par<V>> nuevoNodo = new Nodo<>(nuevoPar);
+
+        // insertar ordenado
+        if (lista.esVacia()) {
+            lista.setPrimero(nuevoNodo);
+            return;
+        }
+
+        INodo<Par<V>> actual = lista.getPrimero();
+        INodo<Par<V>> anterior = null;
+        while (actual != null && actual.getDato().prioridad <= prioridad) {
+            anterior = actual;
+            actual = actual.getSiguiente();
+        }
+
+        if (anterior == null) { // al principio
+            nuevoNodo.setSiguiente(lista.getPrimero());
+            lista.getPrimero().setAnterior(nuevoNodo);
+            lista.setPrimero(nuevoNodo);
+        } else {
+            nuevoNodo.setSiguiente(anterior.getSiguiente());
+            nuevoNodo.setAnterior(anterior);
+            anterior.setSiguiente(nuevoNodo);
+            if (nuevoNodo.getSiguiente() != null) {
+                nuevoNodo.getSiguiente().setAnterior(nuevoNodo);
+            }
+        }
+    }
+
+    public Par<V> desencolar() {
+        if (lista.esVacia()) throw new IllegalStateException("Cola vacia");
+        INodo<Par<V>> primeroNodo = lista.getPrimero();
+        Par<V> dato = primeroNodo.getDato();
+        lista.setPrimero(primeroNodo.getSiguiente());
+        if (lista.getPrimero() != null) {
+            lista.getPrimero().setAnterior(null);
+        }
+        return dato;
+    }
+}
